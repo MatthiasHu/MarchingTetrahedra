@@ -11,7 +11,7 @@ instance (Eq a) => Eq (UnsortedPair a) where
   (UnsortedPair a b) == (UnsortedPair c d)  =  a == c && b == d
 
 instance (Ord a) => Ord (UnsortedPair a) where
-  (UnsortedPair a b) <= (UnsortedPair c d) = a<=c && b<=d
+  (UnsortedPair a b) <= (UnsortedPair c d) = a<c || (a==c && b<=d)
 
 pair :: UnsortedPair a -> (a, a)
 pair (UnsortedPair a b) = (a, b)
