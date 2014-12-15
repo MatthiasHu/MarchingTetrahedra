@@ -7,6 +7,7 @@ import Data.Graph.Inductive.Query.Monad ((><))
 import Tetrahedra
 import Rendering
 import VectorArithmetic
+import Settings as Settings
 
 
 main :: IO ()
@@ -71,14 +72,14 @@ display stateRef = do
   ambient (Light 1) $= Color4 0.1 0.1 0.1 1
   diffuse (Light 1) $= Color4 1.0 0.8 0.5 1
   specular (Light 1) $= Color4 0.5 0.4 0.2 1
-  attenuation (Light 1) $= (0, 0.2, 0.05)
+  attenuation (Light 1) $= (0, 0.2, 0.02)
   -- scene
-  scale scaleFactor scaleFactor scaleFactor
+  let scaleFactor = 10/(fromIntegral Settings.numberOfVoxelsLinear) :: GLfloat in
+    scale scaleFactor scaleFactor scaleFactor
   newList <- callOrDefineList (displayList state) (renderTriangles (gTriangles state))
   stateRef $= state {displayList = Just newList}
   flush
 
-scaleFactor = 0.5 :: GLfloat
 
 
 callOrDefineList :: Maybe DisplayList -> IO () -> IO (DisplayList)
@@ -127,31 +128,10 @@ data State = State
 
 state0 = State {rotation=0, inclination=pi/6, gTriangles=voxelsToTriangles voxels, displayList = Nothing}
 
-
+voxels :: Array VoxelIdentifier GLfloat
 voxels = array (Vector3 (-r) (-r) (-r), Vector3 r r r)
-  [(Vector3 x y z, scalarField (scale'*fromIntegral x) (scale'*fromIntegral y) (scale'*fromIntegral z))
+  [(Vector3 x y z, Settings.scalarField (scale'*fromIntegral x) (scale'*fromIntegral y) (scale'*fromIntegral z))
   | x <- [-r..r], y <- [-r..r], z <- [-r..r]]
-  where r = 10
-        scale' = 0.75 :: GLfloat
-
-scalarField :: GLfloat -> GLfloat -> GLfloat -> GLfloat
-scalarField = \x y z -> scalarFieldTorus y x z + scalarField1 x y z
-
-scalarFieldTorus x y z = (y*y + sq (3 - sqrt (x*x+z*z)))
-                         - sq 1
-  where sq x = x*x
-
-scalarField0 x y z = x*(y-5)
-
-scalarField1 x y z = x*x-y*y*z*z
-
-scalarField2 x y z = x*x*y*z' + x*x*z'*z' - y*y*y*z' - y*y*y
-  where z' = z - 0
-
-scalarField3 x y z = minimum [abs x, abs y, abs z] - 1
-
-scalarField4 x y z = x*x+y*y*(y-4)+z*z*z*x+2
-
-scalarField5 x y z = x*x*x+z*z+y*20
-
+  where r = Settings.numberOfVoxelsLinear `div` 2
+        scale' = Settings.scalarFieldScale / (fromIntegral Settings.numberOfVoxelsLinear)
 
