@@ -13,3 +13,6 @@ Screenshots:
 ![screenshot](/screenshots/torus_01.png)
 ![screenshot](/screenshots/planes_01.png)
 ![screenshot](/screenshots/artificial_01.png)
+
+
+Play around in Settings.hs to see what's possible and to get your own isosurface rendered!
