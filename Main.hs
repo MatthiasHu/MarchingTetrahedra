@@ -22,6 +22,7 @@ main = do
   frustum (-0.05) (0.05) (-0.05) (0.05) (0.1) (100.0)
   matrixMode $= Modelview 0
   clearColor $= Color4 0.0 0.0 0.0 1.0
+  lineWidth $= 3.0
   -- nomalize and flip normal vectors
   normalize $= Enabled
   lightModelTwoSide $= Enabled

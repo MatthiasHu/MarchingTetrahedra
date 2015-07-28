@@ -14,7 +14,7 @@ renderTriangle :: GTriangle -> IO ()
 renderTriangle (Vector3 (vert1,norm1) (vert2,norm2) (vert3,norm3)) = do
 --  normal' normalVector -- (not normalized) face normal (for flat look)
   renderPrimitive Triangles $ do
-    color $ (Color4 1.0 0.8 0.8 1.0 :: Color4 GLfloat)
+    color $ (Color4 1.0 0.8 0.6 1.0 :: Color4 GLfloat)
     normal' norm1
     vertex' vert1
     normal' norm2
@@ -37,5 +37,5 @@ renderTriangles ts =
 
 renderLines :: [[Vertex3 GLfloat]] -> IO ()
 renderLines lss = do
-  color $ (Color4 0.3 0.7 0.9 1.0 :: Color4 GLfloat)
+  color $ (Color4 0.3 0.6 1.0 1.0 :: Color4 GLfloat)
   mapM_ (\ls -> renderPrimitive LineStrip $ mapM_ vertex ls) lss
