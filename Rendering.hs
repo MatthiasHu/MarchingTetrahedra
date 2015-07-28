@@ -1,4 +1,4 @@
-module Rendering (renderTriangle, renderTriangles) where
+module Rendering (renderTriangle, renderTriangles, renderLines) where
 
 import Graphics.UI.GLUT
 
@@ -34,3 +34,8 @@ renderTriangle (Vector3 (vert1,norm1) (vert2,norm2) (vert3,norm3)) = do
 renderTriangles :: [GTriangle] -> IO ()
 renderTriangles ts =
   mapM_ renderTriangle ts
+
+renderLines :: [[Vertex3 GLfloat]] -> IO ()
+renderLines lss = do
+  color $ (Color4 0.3 0.7 0.9 1.0 :: Color4 GLfloat)
+  mapM_ (\ls -> renderPrimitive LineStrip $ mapM_ vertex ls) lss

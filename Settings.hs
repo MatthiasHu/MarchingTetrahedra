@@ -1,19 +1,37 @@
-module Settings (scalarFields, numberOfVoxelsLinear, scalarFieldScale) where
+module Settings
+  ( scalarFields
+  , curves
+  , numberOfVoxelsLinear
+  , curveStep
+  , scale
+  ) where
 
-import Graphics.UI.GLUT (GLfloat)
+import Graphics.UI.GLUT (GLfloat, Vertex3(..))
 
 
 -- The number of voxels (sampling points) in any dimension.
 -- Total number of voxels will therefore be numberOfVoxelsLinear ^ 3.
 numberOfVoxelsLinear :: Int
-numberOfVoxelsLinear = 30
+numberOfVoxelsLinear = 10
 
+-- The parameter step size for rendering the curve(s).
+curveStep :: GLfloat
+curveStep = 0.05
 
 -- Scale factor for the sampling points.
--- Put a lower (/higher) number here to see a smaller (/larger) excerpt of the field.
-scalarFieldScale :: GLfloat
-scalarFieldScale = 10
+-- Put a lower (/higher) number here to see a smaller (/larger)
+-- excerpt of the surface(s) (and curve(s)).
+scale :: GLfloat
+scale = 8
 
+-- Curve(s) to display.
+curves :: [GLfloat -> Vertex3 GLfloat]
+curves =
+ [ \t -> Vertex3
+     ( t )
+     ( t*t )
+     ( t*t*t )
+ ]
 
 -- The actual scalar fields to display the isosurfaces of.
 -- Singleton list for only one surface.

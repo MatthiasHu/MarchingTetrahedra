@@ -6,7 +6,7 @@ import Data.IORef
 import Tetrahedra
 import Rendering
 import VectorArithmetic
-import Settings as Settings
+import qualified Settings
 
 
 main :: IO ()
@@ -22,7 +22,6 @@ main = do
   frustum (-0.05) (0.05) (-0.05) (0.05) (0.1) (100.0)
   matrixMode $= Modelview 0
   clearColor $= Color4 0.0 0.0 0.0 1.0
-  depthFunc $= Just Lequal
   -- nomalize and flip normal vectors
   normalize $= Enabled
   lightModelTwoSide $= Enabled
@@ -73,11 +72,25 @@ display stateRef = do
   specular (Light 1) $= Color4 0.5 0.4 0.2 1
   attenuation (Light 1) $= (0, 0.2, 0.02)
   -- scene
-  let scaleFactor = 10/(fromIntegral Settings.numberOfVoxelsLinear) :: GLfloat in
-    scale scaleFactor scaleFactor scaleFactor
-  newList <- callOrDefineList (displayList state) (renderTriangles (gTriangles state))
+  newList <- callOrDefineList (displayList state) (renderScene state)
   stateRef $= state {displayList = Just newList}
   flush
+
+
+renderScene :: State -> IO ()
+renderScene state = do
+  -- surface(s)
+  depthFunc $= Just Lequal
+  preservingMatrix $ do
+    scale' $ 5/(fromIntegral (Settings.numberOfVoxelsLinear `div` 2))
+    renderTriangles (gTriangles state) 
+  -- curve(s)
+  depthFunc $= Just Always
+  preservingMatrix $ do
+    scale' $ 5/Settings.scale
+    renderLines (gLines state)
+  where scale' :: GLfloat -> IO ()
+        scale' s = scale s s s
 
 
 
@@ -92,6 +105,15 @@ voxelsToTriangles voxels = map (interpolateVertices (voxels !)) allAbstractTrian
         allTetrahedra = concatMap dissectCube allCubes
         allAbstractTriangles = concatMap (doTetrahedron (voxels !)) allTetrahedra
         f >< g = \(x, y) -> (f x, g y)
+
+curveToLines :: (GLfloat -> Vertex3 GLfloat) -> [Vertex3 GLfloat]
+curveToLines curve =
+  reverse [curve (-i*step) | i<-[0..1000], maxNorm (curve (-i*step)) <= bound]
+  ++      [curve ( i*step) | i<-[0..1000], maxNorm (curve ( i*step)) <= bound]
+  where
+    step = Settings.curveStep
+    maxNorm (Vertex3 x y z) = maximum $ map abs [x, y, z]
+    bound = Settings.scale
 
 
 keyboardMouse :: IORef State -> KeyboardMouseCallback
@@ -120,23 +142,30 @@ changeState stateRef f = do
 
 
 data State = State
-  {rotation :: GLfloat
-  ,inclination :: GLfloat  -- rotation and inclination in rad
-  ,gTriangles :: [GTriangle]
-  ,displayList :: Maybe DisplayList
+  { rotation :: GLfloat
+  , inclination :: GLfloat  -- rotation and inclination in rad
+  , gTriangles :: [GTriangle]
+  , gLines :: [[Vertex3 GLfloat]]
+  , displayList :: Maybe DisplayList
   }
 
 state0 = State
   { rotation = 0
   , inclination = pi/6
   , gTriangles = concatMap (voxelsToTriangles . voxels) Settings.scalarFields
+  , gLines = map curveToLines Settings.curves
   , displayList = Nothing
   }
 
 voxels :: (GLfloat -> GLfloat -> GLfloat -> GLfloat) -> Array VoxelIdentifier GLfloat
 voxels scalarField = array (Vector3 (-r) (-r) (-r), Vector3 r r r)
-  [(Vector3 x y z, scalarField (scale'*fromIntegral x) (scale'*fromIntegral y) (scale'*fromIntegral z))
-  | x <- [-r..r], y <- [-r..r], z <- [-r..r]]
+  [ ( Vector3 x y z
+    , scalarField (scale'*fromIntegral x)
+                  (scale'*fromIntegral y)
+                  (scale'*fromIntegral z)
+    )
+  | x <- [-r..r], y <- [-r..r], z <- [-r..r] ]
   where r = Settings.numberOfVoxelsLinear `div` 2
-        scale' = Settings.scalarFieldScale / (fromIntegral Settings.numberOfVoxelsLinear)
+        scale' = Settings.scale /
+                   (fromIntegral (Settings.numberOfVoxelsLinear `div` 2))
 

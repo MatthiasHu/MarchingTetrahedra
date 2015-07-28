@@ -1,4 +1,10 @@
-module Tetrahedra (dissectCube, interpolateVertices, doTetrahedron, VoxelIdentifier, GTriangle) where
+module Tetrahedra
+  ( dissectCube
+  , interpolateVertices
+  , doTetrahedron
+  , VoxelIdentifier
+  , GTriangle
+  ) where
 
 
 import Graphics.UI.GLUT
@@ -44,13 +50,15 @@ interpolateVertex voxelData fvi = ((root' #* voxf1) #+ (root #* voxf2)
 
 
 gradient :: VoxelData -> VoxelIdentifier -> GVector
-gradient voxelData voxel = Vector3 (voxelData (voxel #- Vector3 1 0 0) - voxelData (voxel #+ Vector3 1 0 0))
-                                   (voxelData (voxel #- Vector3 0 1 0) - voxelData (voxel #+ Vector3 0 1 0))
-                                   (voxelData (voxel #- Vector3 0 0 1) - voxelData (voxel #+ Vector3 0 0 1))
+gradient voxelData voxel = Vector3
+  (voxelData (voxel #- Vector3 1 0 0) - voxelData (voxel #+ Vector3 1 0 0))
+  (voxelData (voxel #- Vector3 0 1 0) - voxelData (voxel #+ Vector3 0 1 0))
+  (voxelData (voxel #- Vector3 0 0 1) - voxelData (voxel #+ Vector3 0 0 1))
 
 
 doTetrahedron :: VoxelData -> Tetrahedron -> [AbstractTriangle]
-doTetrahedron voxelData tetrahedron = trianglesLookup tetrahedron (fmap ((>0) . voxelData) tetrahedron)
+doTetrahedron voxelData tetrahedron =
+  trianglesLookup tetrahedron (fmap ((>0) . voxelData) tetrahedron)
 
 
 
