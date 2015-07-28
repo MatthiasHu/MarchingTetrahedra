@@ -1,4 +1,4 @@
-module Settings (scalarField, numberOfVoxelsLinear, scalarFieldScale) where
+module Settings (scalarFields, numberOfVoxelsLinear, scalarFieldScale) where
 
 import Graphics.UI.GLUT (GLfloat)
 
@@ -6,19 +6,20 @@ import Graphics.UI.GLUT (GLfloat)
 -- The number of voxels (sampling points) in any dimension.
 -- Total number of voxels will therefore be numberOfVoxelsLinear ^ 3.
 numberOfVoxelsLinear :: Int
-numberOfVoxelsLinear = 20
+numberOfVoxelsLinear = 30
 
 
 -- Scale factor for the sampling points.
 -- Put a lower (/higher) number here to see a smaller (/larger) excerpt of the field.
 scalarFieldScale :: GLfloat
-scalarFieldScale = 3
+scalarFieldScale = 10
 
 
--- The actual scalar field to display the isosurface of.
+-- The actual scalar fields to display the isosurfaces of.
+-- Singleton list for only one surface.
 -- Define your favourite scalar field below and specify it here.
-scalarField :: GLfloat -> GLfloat -> GLfloat -> GLfloat
-scalarField = scalarFieldHeart
+scalarFields :: [GLfloat -> GLfloat -> GLfloat -> GLfloat]
+scalarFields = [scalarField6_1, scalarField6_2]
 
 
 -- several sample scalar fields:
@@ -47,3 +48,7 @@ scalarField4 x y z = x*x+y*y*(y-4)+z*z*z*x+2
 
 scalarField5 x y z = x*x*x+z*z+y*20
 
+
+scalarField6_1 x y z = x*x - y
+
+scalarField6_2 x y z = x*x*x - z

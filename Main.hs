@@ -126,11 +126,16 @@ data State = State
   ,displayList :: Maybe DisplayList
   }
 
-state0 = State {rotation=0, inclination=pi/6, gTriangles=voxelsToTriangles voxels, displayList = Nothing}
+state0 = State
+  { rotation = 0
+  , inclination = pi/6
+  , gTriangles = concatMap (voxelsToTriangles . voxels) Settings.scalarFields
+  , displayList = Nothing
+  }
 
-voxels :: Array VoxelIdentifier GLfloat
-voxels = array (Vector3 (-r) (-r) (-r), Vector3 r r r)
-  [(Vector3 x y z, Settings.scalarField (scale'*fromIntegral x) (scale'*fromIntegral y) (scale'*fromIntegral z))
+voxels :: (GLfloat -> GLfloat -> GLfloat -> GLfloat) -> Array VoxelIdentifier GLfloat
+voxels scalarField = array (Vector3 (-r) (-r) (-r), Vector3 r r r)
+  [(Vector3 x y z, scalarField (scale'*fromIntegral x) (scale'*fromIntegral y) (scale'*fromIntegral z))
   | x <- [-r..r], y <- [-r..r], z <- [-r..r]]
   where r = Settings.numberOfVoxelsLinear `div` 2
         scale' = Settings.scalarFieldScale / (fromIntegral Settings.numberOfVoxelsLinear)
