@@ -2,7 +2,6 @@
 import Data.Array
 import Graphics.UI.GLUT
 import Data.IORef
-import Data.Graph.Inductive.Query.Monad ((><))
 
 import Tetrahedra
 import Rendering
@@ -92,6 +91,7 @@ voxelsToTriangles voxels = map (interpolateVertices (voxels !)) allAbstractTrian
   where allCubes = range $ ((#+ Vector3 1 1 1) >< (#- Vector3 2 2 2)) $ bounds voxels
         allTetrahedra = concatMap dissectCube allCubes
         allAbstractTriangles = concatMap (doTetrahedron (voxels !)) allTetrahedra
+        f >< g = \(x, y) -> (f x, g y)
 
 
 keyboardMouse :: IORef State -> KeyboardMouseCallback
