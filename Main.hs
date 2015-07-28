@@ -43,8 +43,11 @@ main = do
 
 
 reshape :: ReshapeCallback
-reshape size = do
-  viewport $= (Position 0 0, size)
+reshape (Size w h) = do
+  viewport $= (Position x0 y0, Size dim dim)
+  where dim = min w h
+        x0 = (w-dim) `div` 2
+        y0 = (h-dim) `div` 2
 
 
 display :: IORef State -> DisplayCallback
