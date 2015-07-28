@@ -5,14 +5,6 @@ Visualizes isosurfaces (implicit surfaces).
 
 Using Haskell and OpenGL.
 
-Screenshots:
-![screenshot](/screenshots/wave_01.png)
-![screenshot](/screenshots/bridge_01.png)
-![screenshot](/screenshots/crossing_01.png)
-![screenshot](/screenshots/weird_01.png)
-![screenshot](/screenshots/torus_01.png)
-![screenshot](/screenshots/planes_01.png)
-![screenshot](/screenshots/artificial_01.png)
+This is the version used for rendering the curve (t, t^2, t^3) (as intersection of the zero sets of x^2 - y and x^3 - z) for Mirjam Fahrions bachelor thesis.
 
-
-Play around in Settings.hs to see what's possible and to get your own isosurface rendered!
+![screenshot](/screenshots/curve_01.png)
