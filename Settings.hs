@@ -12,7 +12,7 @@ import Graphics.UI.GLUT (GLfloat, Vertex3(..))
 -- The number of voxels (sampling points) in any dimension.
 -- Total number of voxels will therefore be numberOfVoxelsLinear ^ 3.
 numberOfVoxelsLinear :: Int
-numberOfVoxelsLinear = 30
+numberOfVoxelsLinear = 50
 
 -- The parameter step size for rendering the curve(s).
 curveStep :: GLfloat
@@ -22,7 +22,7 @@ curveStep = 0.05
 -- Put a lower (/higher) number here to see a smaller (/larger)
 -- excerpt of the surface(s) (and curve(s)).
 scale :: GLfloat
-scale = 8
+scale = 5
 
 -- Curve(s) to display.
 curves :: [GLfloat -> Vertex3 GLfloat]

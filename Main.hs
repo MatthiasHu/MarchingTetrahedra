@@ -21,7 +21,7 @@ main = do
   matrixMode $= Projection
   frustum (-0.05) (0.05) (-0.05) (0.05) (0.1) (100.0)
   matrixMode $= Modelview 0
-  clearColor $= Color4 0.0 0.0 0.0 1.0
+  clearColor $= Color4 1.0 1.0 1.0 1.0
   lineWidth $= 3.0
   -- nomalize and flip normal vectors
   normalize $= Enabled
@@ -61,7 +61,8 @@ display stateRef = do
   light (Light 0) $= Enabled
   position (Light 0) $= Vertex4 0 0 0 1
   ambient (Light 0) $= Color4 0.1 0.1 0.1 1
-  diffuse (Light 0) $= Color4 0.6 0.8 1.0 1
+  --diffuse (Light 0) $= Color4 0.6 0.8 1.0 1
+  diffuse (Light 0) $= Color4 0.8 0.8 0.8 1
   specular (Light 0) $= Color4 0.3 0.4 0.5 1
   attenuation (Light 0) $= (0, 0.1, 0.02)
   -- get in place
