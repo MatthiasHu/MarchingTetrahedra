@@ -22,7 +22,7 @@ main = do
   frustum (-0.05) (0.05) (-0.05) (0.05) (0.1) (100.0)
   matrixMode $= Modelview 0
   clearColor $= Color4 1.0 1.0 1.0 1.0
-  lineWidth $= 3.0
+  lineWidth $= 5.0
   -- nomalize and flip normal vectors
   normalize $= Enabled
   lightModelTwoSide $= Enabled
@@ -61,9 +61,8 @@ display stateRef = do
   light (Light 0) $= Enabled
   position (Light 0) $= Vertex4 0 0 0 1
   ambient (Light 0) $= Color4 0.1 0.1 0.1 1
-  --diffuse (Light 0) $= Color4 0.6 0.8 1.0 1
   diffuse (Light 0) $= Color4 0.8 0.8 0.8 1
-  specular (Light 0) $= Color4 0.3 0.4 0.5 1
+  specular (Light 0) $= Color4 0.4 0.4 0.4 1
   attenuation (Light 0) $= (0, 0.1, 0.02)
   -- get in place
   translate $ (Vector3 0 0 (-15) :: Vector3 GLfloat)
@@ -71,10 +70,10 @@ display stateRef = do
   rotate ((rotation state)*180/pi) $ Vector3 0 (1::GLfloat) 0
   -- another light
   light (Light 1) $= Enabled
-  position (Light 1) $= Vertex4 0 8 0 1
+  position (Light 1) $= Vertex4 0 9 0 1
   ambient (Light 1) $= Color4 0.1 0.1 0.1 1
-  diffuse (Light 1) $= Color4 1.0 0.8 0.5 1
-  specular (Light 1) $= Color4 0.5 0.4 0.2 1
+  diffuse (Light 1) $= Color4 0.8 0.8 0.8 1
+  specular (Light 1) $= Color4 0.4 0.4 0.4 1
   attenuation (Light 1) $= (0, 0.2, 0.02)
   -- scene
   newList <- callOrDefineList (displayList state) (renderScene state)
