@@ -2,6 +2,8 @@ module Settings (scalarField, numberOfVoxelsLinear, scalarFieldScale) where
 
 import Graphics.UI.GLUT (GLfloat)
 
+import qualified JuliaMandelbrot as JM
+
 
 -- The number of voxels (sampling points) in any dimension.
 -- Total number of voxels will therefore be numberOfVoxelsLinear ^ 3.
@@ -47,3 +49,12 @@ scalarField4 x y z = x*x+y*y*(y-4)+z*z*z*x+2
 
 scalarField5 x y z = x*x*x+z*z+y*20
 
+
+scalarFieldJM x y z =
+  b ** fromIntegral tcrit - b ** fromIntegral t
+  where
+    t = JM.escapeTime tmax 0 z (x-0.5) y
+    tmax :: Int
+    tmax = 20
+    tcrit = 15
+    b = 0.5
