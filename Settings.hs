@@ -8,19 +8,19 @@ import qualified JuliaMandelbrot as JM
 -- The number of voxels (sampling points) in any dimension.
 -- Total number of voxels will therefore be numberOfVoxelsLinear ^ 3.
 numberOfVoxelsLinear :: Int
-numberOfVoxelsLinear = 20
+numberOfVoxelsLinear = 50
 
 
 -- Scale factor for the sampling points.
 -- Put a lower (/higher) number here to see a smaller (/larger) excerpt of the field.
 scalarFieldScale :: GLfloat
-scalarFieldScale = 3
+scalarFieldScale = 4
 
 
 -- The actual scalar field to display the isosurface of.
 -- Define your favourite scalar field below and specify it here.
 scalarField :: GLfloat -> GLfloat -> GLfloat -> GLfloat
-scalarField = scalarFieldHeart
+scalarField = scalarFieldSeepferdchen
 
 
 -- several sample scalar fields:
@@ -58,3 +58,9 @@ scalarFieldJM x y z =
     tmax = 20
     tcrit = 15
     b = 0.5
+
+-- From the walls at CIRM, Marseille:
+scalarFieldDiabolo x y z = - x^2 + (y^2 + z^2)^2
+scalarFieldDingdong x y z = - x^2 - y^2 + z^2*(1 - z)
+scalarFieldZitrus x y z = - x^2 - z^2 + y^3*(1 - y)^3
+scalarFieldSeepferdchen x y z = - (x^2 - y^3)^2 + (x + y^2)*z^3
